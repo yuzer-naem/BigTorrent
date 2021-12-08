@@ -1,4 +1,4 @@
-from bencoding import Encoder
+from bencoding import *
 
 file = input("enter torrent file to open: ")
 print(file)
@@ -9,5 +9,9 @@ obj = {
 }
 
 encoder = Encoder(obj)
-
-print(encoder.encode())
+text = encoder.encode()
+print(text)
+print(text.decode("ascii"))
+print(obj)
+decoder = Decoder(text)
+print(decoder.decode())
