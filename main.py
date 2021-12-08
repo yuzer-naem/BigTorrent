@@ -1,4 +1,5 @@
-from bencoding import *
+from bencode import Encoder
+from bdecode import Decoder
 
 file = input("enter torrent file to open: ")
 print(file)
