@@ -1,11 +1,10 @@
 
-
 class Decoder:
     def __init__(self, binary: bytes):
-        self.text = binary.decode("ascii")
+        self.text = binary
         self.ind = 0
 
-    def _pop(self) -> str:
+    def _pop(self):
         self.ind += 1
         return self.text[self.ind - 1]
 
@@ -17,30 +16,38 @@ class Decoder:
         return self.text[self.ind - size:self.ind]
 
     def _cur(self):
-        return self.text[self.ind]
+        try:
+            return self.text[self.ind]
+        except:
+            print(self.ind)
+            print(len(self.text))
+            raise
 
     def decode(self) -> object:
-        char: str = self._cur()
+        char = chr(self._cur())
 
-        if char == "d":
-            self._skip()
-            return self.decode_dict()
-        elif char == "l":
-            self._skip()
-            return self.decode_list()
-        elif char == "i":
-            self._skip()
-            return self.decode_int("e")
-        elif char.isnumeric():
-            return self.decode_str()
-        else:
-            print(char)
+        try:
+            if char == "d":
+                self._skip()
+                return self.decode_dict()
+            elif char == "l":
+                self._skip()
+                return self.decode_list()
+            elif char == "i":
+                self._skip()
+                return self.decode_int(ord("e"))
+            elif char.isnumeric():
+                return self.decode_str()
+            else:
+                raise
+        except:
+            print(self.text.decode("ascii")[self.ind-2:self.ind+2])
             raise Exception("Weird bencoding at ", self.ind)
 
     def decode_dict(self):
         obj = {}
 
-        while self._cur() != "e":
+        while chr(self._cur()) != "e":
             key = self.decode()
             value = self.decode()
             obj[key] = value
@@ -51,7 +58,7 @@ class Decoder:
     def decode_list(self):
         obj = []
 
-        while self._cur() != "e":
+        while chr(self._cur()) != "e":
             obj.append(self.decode())
 
         self._skip()
@@ -62,8 +69,9 @@ class Decoder:
 
         while self._cur() != ending:
             obj *= 10
+
             try:
-                obj += int(self._pop())
+                obj += self._pop() - 48
             except ValueError:
                 raise Exception("weird number at ", self.ind)
 
@@ -71,4 +79,4 @@ class Decoder:
         return obj
 
     def decode_str(self):
-        return self._chunk(self.decode_int(":")).encode("ascii")
+        return self._chunk(self.decode_int(ord(":")))
