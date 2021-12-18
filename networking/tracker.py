@@ -1,23 +1,20 @@
-from fileio import bencode, bdecode
-import hashlib
-import random
+from networking.response import TrackerResponse
 
 
-class Torrent:
+class Tracker:
     def __init__(self, metainfo):
         self.metainfo = metainfo
 
-        # params
-        self.info_string = bencode.Encoder(metainfo.object[b"info"]).encode()
-        hasher = hashlib.sha1()
-        hasher.update(self.info_string)
-        self.info_hash = hasher.digest()
-        self.peer_id = "-BG0001-" + str(random.randint(0, 10 ** 12 - 1)).zfill(12)
-        self.port = 0
-        self.uploaded = 0
-        self.downloaded = 0
-        self.left = 0
-        self.event = "started"
+    def get_request(self, peer_id, port, uploaded, downloaded, left, event) -> TrackerResponse:
+        params = {
+            "info_hash": self.metainfo.info_hash,
+            "peer_id": peer_id,
+            "port": port,
+            "uploaded": uploaded,
+            "downloaded": downloaded,
+            "left": left,
+            "compact": 0,
+            "event": event,
+        }
 
-    def get_request(self, port, uploaded, downloaded, left, event):
-        pass
+        return TrackerResponse(b"fuck")
