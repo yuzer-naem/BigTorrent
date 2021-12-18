@@ -1,5 +1,5 @@
 import random
-from fileio import bencode
+from fileio.bdecode import Decoder
 from networking.tracker import Tracker
 
 
@@ -14,4 +14,13 @@ class Client:
         self.left = tracker.metainfo.size
         self.event = "started"
 
-        self.response = self.tracker.get_request(self.peer_id, self.port, self.uploaded, self.downloaded, self.left, self.event)
+        self.raw = self.tracker.get_request(self.peer_id, self.port,
+                                                       self.uploaded, self.downloaded,
+                                                       self.left, self.event)
+
+        self.response = Decoder(self.raw).decode()
+        self.peers = self.response[b"peers"]
+        self.interval = self.response[b"interval"]
+
+    def getresponse(self):
+        pass

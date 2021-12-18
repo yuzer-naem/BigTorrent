@@ -39,10 +39,10 @@ class Decoder:
             elif char.isnumeric():
                 return self.decode_str()
             else:
-                raise
+                raise Exception("fuck")
         except:
-            print(self.text.decode("ascii")[self.ind-2:self.ind+2])
-            raise Exception("Weird bencoding at ", self.ind)
+            text = self.text.decode("ascii")[self.ind-2:self.ind+2]
+            raise Exception("Weird bencoding at ", self.ind, text)
 
     def decode_dict(self):
         obj = {}

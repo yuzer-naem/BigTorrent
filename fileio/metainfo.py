@@ -19,5 +19,9 @@ class MetaInfo:
         hasher.update(self.info_string)
         self.info_hash = hasher.digest()
 
-        self.size = self.info_dict[b"piece length"] * len(self.info_dict[b"pieces"]) / 20
-        self.trackers = self.dict[b"url-list"]
+        self.size = int(self.info_dict[b"piece length"] * len(self.info_dict[b"pieces"]) / 20)
+
+        if b"url-list" in self.dict.keys():
+            self.trackers = self.dict[b"url-list"]
+        else:
+            self.trackers = self.dict[b"announce-list"]
