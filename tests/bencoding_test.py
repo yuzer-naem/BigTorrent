@@ -1,6 +1,6 @@
 import unittest
-from bdecode import Decoder
-from bencode import Encoder
+from fileio.bdecode import Decoder
+from fileio.bencode import Encoder
 
 
 class TestBencoder(unittest.TestCase):

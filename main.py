@@ -1,18 +1,12 @@
-from bencode import Encoder
-from bdecode import Decoder
+from fileio.metainfo import MetaInfo
+from fileio.bencode import Encoder
+from fileio.bdecode import Decoder
 
 file = input("enter torrent file to open: ")
-print(file)
 
-obj = {
-    "number": 5,
-    "list": ["we are gaming", 12, b"nice to meet you"]
-}
+metainfo = MetaInfo(file)
 
-encoder = Encoder(obj)
-text = encoder.encode()
-print(text)
-print(text.decode("ascii"))
-print(obj)
-decoder = Decoder(text)
-print(decoder.decode())
+info = metainfo.object[b"info"]
+
+print(metainfo.binary == Encoder(metainfo.object).encode())
+print(metainfo.object == Decoder(metainfo.binary).decode())
