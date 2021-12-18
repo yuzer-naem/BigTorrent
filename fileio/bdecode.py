@@ -23,7 +23,7 @@ class Decoder:
             print(len(self.text))
             raise
 
-    def decode(self) -> object:
+    def decode(self):
         char = chr(self._cur())
 
         try:
