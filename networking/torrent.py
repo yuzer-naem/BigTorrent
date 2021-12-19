@@ -3,7 +3,7 @@ from fileio.bdecode import Decoder
 from networking.tracker import Tracker
 
 
-class Client:
+class Torrent:
     def __init__(self, tracker: Tracker):
         self.tracker = tracker
 

@@ -1,7 +1,7 @@
 from fileio.metainfo import MetaInfo
 from fileio.bencode import Encoder
 from fileio.bdecode import Decoder
-from networking.client import Client
+from networking.torrent import Torrent
 from networking.tracker import Tracker
 
 
@@ -16,12 +16,12 @@ def main():
     print(metainfo.binary == Encoder(metainfo.dict).encode())
     print(metainfo.dict == Decoder(metainfo.binary).decode())
 
-    torrent = Client(Tracker(metainfo))
+    torrent = Torrent(Tracker(metainfo))
     torrent.getresponse()
 
     print(torrent.peer_id)
     print(torrent.response)
-    print(torrent.response.raw_response)
+    print(torrent.raw)
 
 
 if __name__ == '__main__':

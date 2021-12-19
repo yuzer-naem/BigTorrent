@@ -1,4 +1,3 @@
-from networking.response import TrackerResponse
 import requests
 from urllib.parse import urlencode
 
@@ -8,7 +7,7 @@ class Tracker:
         self.metainfo = metainfo
 
     def get_request(self, peer_id, port, uploaded, downloaded,
-                          left, event) -> TrackerResponse:
+                          left, event):
         params = {
             "info_hash": self.metainfo.info_hash,
             "peer_id": peer_id,
