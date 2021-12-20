@@ -1,13 +1,14 @@
-import requests
 from urllib.parse import urlencode
+import asyncio
+import aiohttp
 
 
 class Tracker:
     def __init__(self, metainfo):
         self.metainfo = metainfo
 
-    def get_request(self, peer_id, port, uploaded, downloaded,
-                          left, event):
+    async def get_request(self, peer_id, port, uploaded, downloaded,
+                          left, event, session: aiohttp.ClientSession):
         params = {
             "info_hash": self.metainfo.info_hash,
             "peer_id": peer_id,
@@ -29,12 +30,15 @@ class Tracker:
             print(urlencode(params))
 
             try:
-                with requests.get(url) as response:
-                    if response.status_code != 200:
-                        print("unable to connect to ", tracker, ", trying other trackers")
-                    else:
-                        return response.content
-            except ConnectionError as e:
+                response = await session.get(url)
+
+                if response.status != 200:
+                    print("unable to connect to ", tracker, ", trying other trackers")
+                else:
+                    return response.content
+
+                response.close()
+            except aiohttp.ClientError as e:
                 print("tracker", tracker, "failed because \"", e, "\"trying other trackers")
 
             raise Exception("Couldn't get one single tracker to work >:(")
