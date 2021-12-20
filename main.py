@@ -9,21 +9,20 @@ from networking.tracker import Tracker
 
 
 async def main():
-    session = aiohttp.ClientSession()
-    file = input("enter torrent file to open: ")
-    metainfo = MetaInfo(file)
-    info = metainfo.dict[b"info"]
+    async with aiohttp.ClientSession() as session:
+        file = input("enter torrent file to open: ")
+        metainfo = MetaInfo(file)
+        info = metainfo.dict[b"info"]
 
-    # should both be true
-    print(metainfo.binary == Encoder(metainfo.dict).encode())
-    print(metainfo.dict == Decoder(metainfo.binary).decode())
+        # should both be true
+        print(metainfo.binary == Encoder(metainfo.dict).encode())
+        print(metainfo.dict == Decoder(metainfo.binary).decode())
 
-    torrent = Torrent(Tracker(metainfo))
-    await torrent.start(session)
+        torrent = Torrent(Tracker(metainfo))
+        await torrent.start(session)
 
-    print(torrent.peer_id)
-    print(torrent.response)
-    print(torrent.raw)
-
+        print(torrent.peer_id)
+        print(torrent.response)
+        print(torrent.raw)
 if __name__ == '__main__':
     asyncio.run(main())

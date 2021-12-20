@@ -19,9 +19,17 @@ class Torrent:
         self.interval = None
 
     async def start(self, session):
-        self.raw = await self.tracker.get_request(self.peer_id, self.port,
-                                                  self.uploaded, self.downloaded,
-                                                  self.left, "started", session)
+        params = {
+            "peer_id": self.peer_id,
+            "port": self.port,
+            "uploaded": self.uploaded,
+            "downloaded": self.downloaded,
+            "left": self.left,
+            "compact": 0,
+            "event": "started",
+        }
+
+        self.raw = await self.tracker.get_request(params, session)
 
         self.response = Decoder(self.raw).decode()
         self.peers = self.response[b"peers"]
