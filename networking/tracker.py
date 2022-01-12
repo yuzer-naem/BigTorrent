@@ -16,17 +16,17 @@ class Tracker:
                 tracker = tracker[0]
 
             url = tracker.decode("ascii") + "?" + urlencode(params)
+            # url = "https://www.google.com"
             print(tracker)
             print(urlencode(params))
 
             try:
-                with await session.get(url) as response:
-                    if response.code != 200:
-                        print("unable to connect to ", tracker, ", trying other trackers")
-                    else:
-                        return response.content
+                async with session.get(url) as response:
+                    if not response.status == 200:
+                        raise ConnectionError('Unable to connect to tracker')
+                    return await response.read()
             except aiohttp.ClientError as e:
-                print("tracker", tracker, "failed because \"", e, "\"trying other trackers")
+                print("tracker", tracker.decode("ascii"), "failed because \"", e, "\"trying other trackers")
 
         raise Exception("Couldn't get one single tracker to work >:(")
 

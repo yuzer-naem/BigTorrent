@@ -6,10 +6,15 @@ from fileio.bencode import Encoder
 from fileio.bdecode import Decoder
 from networking.torrent import Torrent
 from networking.tracker import Tracker
+import certifi
+import ssl
 
 
 async def main():
-    async with aiohttp.ClientSession() as session:
+    sslcontext = ssl.create_default_context(cafile=certifi.where())
+    connection = aiohttp.TCPConnector(ssl=sslcontext)
+
+    async with aiohttp.ClientSession(connector=connection) as session:
         file = input("enter torrent file to open: ")
         metainfo = MetaInfo(file)
         info = metainfo.dict[b"info"]
@@ -23,6 +28,7 @@ async def main():
 
         print(torrent.peer_id)
         print(torrent.response)
-        print(torrent.raw)
+
+
 if __name__ == '__main__':
     asyncio.run(main())

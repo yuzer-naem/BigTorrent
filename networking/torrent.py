@@ -8,7 +8,7 @@ class Torrent:
         self.tracker = tracker
 
         self.peer_id = "-BG0001-" + str(random.randint(0, 10 ** 12 - 1)).zfill(12)
-        self.port = 6884
+        self.port = 221
         self.uploaded = 0
         self.downloaded = 0
         self.left = tracker.metainfo.size
