@@ -31,4 +31,7 @@ async def main():
 
 
 if __name__ == '__main__':
+    # event loop policy stops a weird error message
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
     asyncio.run(main())
