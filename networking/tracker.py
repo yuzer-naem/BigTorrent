@@ -1,7 +1,5 @@
 from urllib.parse import urlencode
-import asyncio
 import aiohttp
-import requests
 
 
 class Tracker:
@@ -23,7 +21,7 @@ class Tracker:
             try:
                 async with session.get(url) as response:
                     if not response.status == 200:
-                        raise ConnectionError('Unable to connect to tracker')
+                        raise ConnectionError('Unable to connect to tracker, {}'.format(response.status))
                     return await response.read()
             except aiohttp.ClientError as e:
                 print("tracker", tracker.decode("ascii"), "failed because \"", e, "\"trying other trackers")

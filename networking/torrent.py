@@ -3,6 +3,7 @@ from fileio.bdecode import Decoder
 from networking.tracker import Tracker
 import asyncio
 
+COMPACT = 1
 
 class Torrent:
     def __init__(self, tracker: Tracker):
@@ -20,18 +21,16 @@ class Torrent:
         self.interval = None
         self.is_alive = True
 
-        self.params = {
+    async def init(self, session):
+        self.raw = await self.tracker.get_request({
             "peer_id": self.peer_id,
             "port": self.port,
-            "uploaded": self.uploaded,
             "downloaded": self.downloaded,
+            "uploaded": self.uploaded,
             "left": self.left,
-            "compact": 0,
-            "event": "started",
-        }
-
-    async def start(self, session):
-        self.raw = await self.tracker.get_request(self.params, session)
+            "compact": COMPACT,
+            "event": "started"
+        }, session)
         self.response = Decoder(self.raw).decode()
 
         self.peers = self.response[b"peers"]

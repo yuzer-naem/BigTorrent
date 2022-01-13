@@ -26,7 +26,7 @@ async def main():
         print(metainfo.dict == Decoder(metainfo.binary).decode())
 
         torrent = Torrent(Tracker(metainfo))
-        await torrent.start(session)
+        await torrent.init(session)
 
         print(torrent.peer_id)
         print(torrent.response)
