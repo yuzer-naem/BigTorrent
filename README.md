@@ -1,2 +1,2 @@
 # BigTorrent
-Bit torrent client written in python using requests library :)
+Bit torrent client written in python using asyncio and aiohttp library :)
