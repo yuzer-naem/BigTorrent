@@ -11,6 +11,8 @@ import ssl
 
 
 async def main():
+    # use certifi because the system defaults aiohttp uses are shit
+    # might have to remove ssl altogether later
     sslcontext = ssl.create_default_context(cafile=certifi.where())
     connection = aiohttp.TCPConnector(ssl=sslcontext)
 

@@ -39,7 +39,7 @@ class Decoder:
             elif char.isnumeric():
                 return self.decode_str()
             else:
-                raise Exception("fuck")
+                raise Exception("fucking weird decoding")
         except:
             text = self.text.decode("ascii")[self.ind-2:self.ind+2]
             raise Exception("Weird bencoding at ", self.ind, text)

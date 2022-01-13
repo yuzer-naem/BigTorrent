@@ -1,6 +1,7 @@
 import random
 from fileio.bdecode import Decoder
 from networking.tracker import Tracker
+import asyncio
 
 
 class Torrent:
@@ -17,9 +18,9 @@ class Torrent:
         self.response = None
         self.peers = None
         self.interval = None
+        self.is_alive = True
 
-    async def start(self, session):
-        params = {
+        self.params = {
             "peer_id": self.peer_id,
             "port": self.port,
             "uploaded": self.uploaded,
@@ -29,8 +30,16 @@ class Torrent:
             "event": "started",
         }
 
-        self.raw = await self.tracker.get_request(params, session)
-
+    async def start(self, session):
+        self.raw = await self.tracker.get_request(self.params, session)
         self.response = Decoder(self.raw).decode()
+
         self.peers = self.response[b"peers"]
         self.interval = self.response[b"interval"]
+
+    async def communicate(self, session, interval):
+        while self.is_alive:
+            cor = self.tracker.get_request(self.params, session)
+            await asyncio.sleep(interval)
+            await cor
+
